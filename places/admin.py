@@ -3,6 +3,17 @@ from .models import Place, Image
 
 # Register your models here.
 
-admin.site.register(Place)
+class ImageInline(admin.TabularInline):
+    model = Image
 
-admin.site.register(Image)
+
+@admin.register(Place)
+class PlaceAdmin(admin.ModelAdmin):
+    inlines = [
+        ImageInline,
+    ]
+
+
+@admin.register(Image)
+class ImageAdmin(admin.ModelAdmin):
+    pass
