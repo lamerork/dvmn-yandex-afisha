@@ -137,3 +137,7 @@ GitHub.sublime-settings
 .history
 
 images/
+.DS_Store
+static/.editorconfig
+static/README.md
+static/SUMMARY.md
