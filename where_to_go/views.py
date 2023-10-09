@@ -1,5 +1,8 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404
 from django.template import loader
+from django.urls import reverse
+from places.models import Place
 
 
 def show_index(request):
@@ -7,33 +10,45 @@ def show_index(request):
     context = {}
     context['json'] = {
       "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [37.62, 55.793676]
-          },
-          "properties": {
-            "title": "«Легенды Москвы",
-            "placeId": "moscow_legends",
-            "detailsUrl": "static/places/moscow_legends.json"
-          }
-        },
-        {
-          "type": "Feature",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [37.64, 55.753676]
-          },
-          "properties": {
-            "title": "Крыши24.рф",
-            "placeId": "roofs24",
-            "detailsUrl": "static/places/roofs24.json"
-          }
-        }
-      ]
+      "features": []
     }
+
+    places = Place.objects.all()
+
+    features = []
+
+    for place in places:
+        feature = {
+             'type': 'Feature',
+             'geometry': {
+                 'type': 'Point',
+                 'coordinates': [place.lng, place.lat]
+             },
+             'properties': {
+                 'title': place.title,
+                 'place_id': place.id,
+                 'detailsUrl': reverse('place_detail', kwargs={'id': place.id})
+             }
+        }
+        features.append(feature)
+
+    context['json']['features'] = features
 
     rendered_page = template.render(context, request)
     return HttpResponse(rendered_page)
+
+
+def show_detail(request, id):
+    place = get_object_or_404(Place, pk=id)
+
+    place_serialized = {
+         'title': place.title,
+         'imgs': [image.image.url for image in place.images.all()],
+         'description_short': place.description_short,
+         'description_long': place.description_long,
+         'coordinates': {
+             'lng': place.lng,
+             'lat': place.lat
+         }
+     }
+    return JsonResponse(place_serialized, json_dumps_params={'indent': 4, 'ensure_ascii': False, })
