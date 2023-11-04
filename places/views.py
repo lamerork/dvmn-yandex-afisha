@@ -37,7 +37,7 @@ def show_index(request):
 
 
 def show_detail(request, id):
-    place = get_object_or_404(Place, pk=id)
+    place = get_object_or_404(Place.objects.prefetch_related('images'), pk=id)
 
     place_serialized = {
          'title': place.title,
