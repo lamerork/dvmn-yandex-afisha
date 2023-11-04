@@ -31,10 +31,11 @@ class Command(BaseCommand):
 
         place_description = response.json()
         place, created = Place.objects.get_or_create(title=place_description['title'],
-                                                 lat=place_description['coordinates']['lat'],
-                                                 lng=place_description['coordinates']['lng'],
-                                                 description_long=place_description['description_long'],
-                                                 description_short=place_description['description_short'])
+                                                     defaults={'lat': place_description['coordinates']['lat'],
+                                                               'lng': place_description['coordinates']['lng'],
+                                                               'long_description': place_description['description_long'],
+                                                               'short_description': place_description['description_short']}
+                                                    )
 
         if created:
             upload_images(place_description['imgs'], place)
