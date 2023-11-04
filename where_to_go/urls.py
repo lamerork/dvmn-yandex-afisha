@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.conf import settings
 from django.views.static import serve
 from django.urls import path, re_path, include
-from .views import show_index, show_detail
+
+from places.views import show_index, show_detail
 
 
 urlpatterns = [
