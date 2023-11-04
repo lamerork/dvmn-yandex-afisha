@@ -17,7 +17,7 @@ def show_index(request):
     features = []
 
     for place in places:
-        feature = {
+        features.append({
              'type': 'Feature',
              'geometry': {
                  'type': 'Point',
@@ -28,11 +28,10 @@ def show_index(request):
                  'place_id': place.id,
                  'detailsUrl': reverse('place_detail', kwargs={'id': place.id})
              }
-        }
-        features.append(feature)
+        })
 
     context['json']['features'] = features
-
+    
     return render(request, 'index.html', context=context)
 
 
