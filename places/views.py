@@ -2,6 +2,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.urls import reverse
+
 from places.models import Place
 
 
@@ -44,8 +45,8 @@ def show_detail(request, id):
     place_serialized = {
          'title': place.title,
          'imgs': [image.image.url for image in place.images.all()],
-         'description_short': place.description_short,
-         'description_long': place.description_long,
+         'short_description': place.short_description,
+         'long_description': place.long_description,
          'coordinates': {
              'lng': place.lng,
              'lat': place.lat
